@@ -1,0 +1,146 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style type="text/css">
+	body{
+		background-color: #F1F1F1;
+	}
+	ul{
+		margin:0 auto;
+		padding: 0;
+		width: 1208px;
+		position: relative;
+		overflow: hidden;
+		height: 500px;;
+	}
+	li{
+		list-style-type: none;
+		float: left;
+		padding: 10px;
+		margin: 0 1px;
+		background-color: white;
+	}
+	p{
+		margin: 0;
+		text-align: center;
+		background-color: #F1F1F1;
+		line-height: 40px;
+		font-size: 20px;
+		font-weight: bold;
+	}
+	img{
+		vertical-align: top;
+	}
+	div{
+		margin:0 auto;
+		width: 210px;
+	}
+	div:after{
+		content: '';
+		display: block;
+		clear: both;
+	}
+	a{
+		text-decoration: none;
+		width: 100px;
+		line-height: 40px;
+		display: block;
+		color: white;
+		background-color: #009999;
+		text-align: center;
+		float: left;
+	}
+	a:nth-child(1){
+		margin-right: 10px;
+	}
+	
+</style>
+	<script>
+		window.onload = function () {
+			/*json {
+			 top:
+			 left:
+
+			 }*/
+			var oBtn01 = document.getElementsByTagName('a')[0];
+			var oBtn02 = document.getElementsByTagName('a')[1];
+			var aLi = document.getElementsByTagName('li');
+			aLi = Array.prototype.slice.call(aLi) ;
+			var oUl = document.getElementsByTagName('ul')[0];
+			var arrIndex = [];
+			var arrPosi = [];  //数据格式[top:,left:],[top:,left:]
+			var arr=[aLi[0],aLi[0],aLi[0]]
+			arr.forEach(function (item) {
+			 });
+			//布局转换 -> 得到每个li的绝对定位位置 :arrPosi
+			for (var i = 0; i < aLi.length; i++) {
+				var iLeft = aLi[i].offsetLeft;
+				var iTop = aLi[i].offsetTop;
+				var arrLittle = [];
+//				console.log(iTop, iLeft)
+				arrLittle.push(iTop);
+				arrLittle.push(iLeft);
+				arrPosi.push(arrLittle);
+			}
+			setTimeout(function () {
+				for (var i = 0; i < aLi.length; i++) {
+					aLi[i].style.top = arrPosi[i][0] + 'px';
+					aLi[i].style.left = arrPosi[i][1] + 'px';
+					aLi[i].style.position = 'absolute';
+				}
+			}, 500)
+
+			//将原li的下标组成一个新的数组:arrIndex
+			for (var i = 0; i < aLi.length; i++) {
+				aLi[i].index = i;
+				arrIndex.push(aLi[i].index);
+				//		arrContent.push(aLi[i].innerHTML)
+			}
+			//点击顺序排列，重新按照下标排序
+			oBtn01.onclick = function () {
+				//首先将下标数组按从小到大排序
+				arrIndex.sort(function (a, b) {
+					return a - b;
+				})
+				//将对应arrIndex的li的定位运动到arrPosi的位置
+				for (var i = 0; i < arrIndex.length; i++) {
+					Move(aLi[arrIndex[i]], {top: arrPosi[i][0], left: arrPosi[i][1]});
+				}
+			}
+			oBtn02.onclick = function () {
+				//首先将下标数组按从小到大排序
+				arrIndex.sort(function (a, b) {
+					return Math.random() - 0.5;
+				})
+				//将对应arrIndex的li的定位运动到arrPosi的位置
+				for (var i = 0; i < arrIndex.length; i++) {
+					Move(aLi[arrIndex[i]], {top: arrPosi[i][0], left: arrPosi[i][1]});
+					//			console.log(arrPosi[i][0],arrPosi[i][1])
+					/*aLi[arrIndex[i]].style.top = arrPosi[i][0] + 'px';
+					 aLi[arrIndex[i]].style.left = arrPosi[i][1] + 'px';*/
+				}
+			}
+		}
+	</script>
+</head>
+
+<body>
+	<div>
+		<a href="javascript:;">从小到大</a><a href="javascript:;">打乱顺序</a>
+	</div>
+	<ul>
+		<li><img src="img/1.jpg" alt=""><p>1-温馨办公</p></li>
+		<li><img src="img/2.jpg" alt=""><p>2-游戏桌面</p></li>
+		<li><img src="img/3.jpg" alt=""><p>3-汽车摇滚</p></li>
+		<li><img src="img/4.jpg" alt=""><p>4-狭路相逢</p></li>
+		<li><img src="img/5.jpg" alt=""><p>5-棒球小子</p></li>
+		<li><img src="img/6.jpg" alt=""><p>6-球鞋动力</p></li>
+		<li><img src="img/7.jpg" alt=""><p>7-游戏官网</p></li>
+		<li><img src="img/8.jpg" alt=""><p>8-指尖社区</p></li>
+	</ul>
+</body>
+</html>
+<script SRC="xzkTools.js"></script>
+

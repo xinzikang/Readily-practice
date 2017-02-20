@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        td {
+            text-align: center;
+            height: 26px;
+        }
+
+    </style>
+   
+</head>
+
+<body>
+
+<form action="" name="form">
+    <p>
+        姓名:<input type="text" name="username"/>
+    </p>
+    <p>
+        年龄:<input type="text" name="age"/>
+    </p>
+    <p>
+        性别: <select name="sex">
+            <option value="男">男</option>
+            <option value="女">女</option>
+        </select>
+    </p>
+    <p>
+        <input type="button" value="添加" name="add"/>
+    </p>
+</form>
+    <input type="button" value="反选" id="onOff">
+    <input type="button" value="批量删除"  id="deleteSome">
+    <table id="tab1" width="100%" border="1">
+        <thead>
+        <tr>
+            <th>
+                <input id="checkAll" type="checkbox" /> 全选
+            </th>
+            <th>ID</th>
+            <th>姓名</th>
+            <th>年龄</th>
+            <th>性别</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+           <!--  <tr>
+                <td>
+                    <input type="checkbox"/>
+                </td>
+                <td>1</td>
+                <td>周杰伦</td>
+                <td>37</td>
+                <td>男</td>
+                <td>
+                    <a href="javascript:;">上移</a> |
+                    <a href="javascript:;">下移</a> |
+                    <a href="javascript:;">删除</a>
+                </td>
+            </tr> -->
+        </tbody>
+
+    </table>
+    <script type="text/javascript">
+    /*
+        1、根据数据生成表格。
+        2、数据的添加
+        3、全选
+        4、上移下移删除
+        5、排序
+        6、反选
+        7、批量删除（被选中的删除）
+    */
+    var data = [
+            {
+                 'id' : 1,
+                'username' : '周杰伦',
+                'age' : 37,
+                'sex' : '男'
+            },
+            {
+                'id' : 2,
+                'username' : '阿信',
+                'age' : 39,
+                'sex' : '男'
+            },
+            {
+                'id' : 3,
+                'username' : '王俊凯',
+                'age' : 17,
+                'sex' : '男'
+            },
+            {
+                'id' : 4,
+                'username' : '宋仲基',
+                'age' : 31,
+                'sex' : '男'
+            },
+            {
+                'id' : 5,
+                'username' : '赵雅芝',
+                'age' : 62,
+                'sex' : '女'
+            }
+        ];
+    //创建DOM
+    var tab = document.getElementById('tab1');
+    var tBody = tab.tBodies[0];
+    var aTr = tBody.getElementsByTagName('tr');
+    var inputBtn = tab.tHead.getElementsByTagName('input')[0]; //全选按钮
+    var aInput = tBody.getElementsByTagName('input'); //最左侧点击按钮
+    var onOff = document.getElementById('onOff'); //点击反选
+    var deleteSome = document.getElementById('deleteSome');  //批量删除
+    var id = 1;
+    for(var i=0;i<data.length;i++){
+        creatDom(data[i]);
+    }
+    //渲染DOM函数
+    function creatDom(newData) {  //使用appendChid方法，就是为了在这个过程中添加事件，如果只是为了渲染结构，直接用innerHTML更方便。二者的区别
+        //并且事件删除的时候，可以直接使用tr,而不用一直找父级
+        var tr = document.createElement('tr');
+        tr.index = id;
+        var td0 = document.createElement('td');
+        var checkBox = document.createElement('input');
+        checkBox.type = 'checkBox';
+        checkBox.onclick = function () {
+            isAllSelect();
+        }
+        td0.appendChild(checkBox);
+        tr.appendChild(td0);
+        for (var k in newData) {
+            var td = document.createElement('td');
+            td.innerHTML = newData[k];
+            tr.appendChild(td);
+        }
+        var lastTd = document.createElement('td');
+        var btnUp = document.createElement('a');
+        var btnDown = document.createElement('a');
+        var btnRemove = document.createElement('a');
+        var line1 = document.createTextNode('|');
+        var line2 = document.createTextNode('|');
+        btnUp.innerHTML = '上移';
+        btnUp.className = 'moveUp';
+        btnDown.className = 'moveDown';
+        btnRemove.className = 'removeEle';
+        btnDown.innerHTML = '下移';
+        btnRemove.innerHTML = '删除';
+        btnDown.onclick = function () {
+            if(this.parentNode.parentNode.nextElementSibling){
+                tBody.insertBefore(this.parentNode.parentNode.nextElementSibling,this.parentNode.parentNode)
+            } else{
+                alert('已经是最后一个');
+            }
+        }
+        btnUp.onclick = function () {
+            if(this.parentNode.parentNode.previousElementSibling){
+                tBody.insertBefore(this.parentNode.parentNode,this.parentNode.parentNode.previousElementSibling)
+            } else{
+                alert('已经是第一个')
+            }
+        }
+        btnRemove.onclick = function () {
+            //操作删除结构
+
+            //操作删除数据
+        for(var i=0;i<data.length;i++){
+            if(aTr[i].index == data[i].id){
+                data.splice(i,1);
+            }
+        //    var n = parseInt(tr.children[1].innerHTML);
+
+        }
+
+            console.log(data)
+            tBody.removeChild(tr);
+            isAllSelect();
+        }
+        lastTd.appendChild(btnUp);
+        lastTd.appendChild(line1);
+        lastTd.appendChild(btnDown);
+        lastTd.appendChild(line2);
+        lastTd.appendChild(btnRemove);
+        tr.appendChild(lastTd);
+        tBody.appendChild(tr);
+        id++;
+    }
+    //添加数据
+    var fm = document.form;
+    var addBtn = fm.add;
+    //得带添加要处理的数据
+    function add(){
+        var name = fm.username;
+        var age = fm.age;
+        var sex = fm.sex;
+        var js={};
+        js.id = id;
+        js.username = name.value;
+        js.age = age.value;
+        js.sex = sex.value;
+        data.push(js);
+    }
+    addBtn.onclick = function () {
+        add();
+        console.log(1)
+        var newData = data[data.length-1];
+        creatDom(newData);
+        isAllSelect();
+    }
+
+//判断是否全选函数
+    function isAllSelect(){
+        var allSelect = true; //都选中的
+        for(var i=0;i<aInput.length;i++){
+            if (aInput[i].checked == false){
+                allSelect = false;
+            }
+        }
+        if(allSelect && aInput.length != 0){  //选项为空的话  也是不能勾选的
+            inputBtn.checked = true;
+        } else{
+            inputBtn.checked = false;
+        }
+    }
+
+        //点击全选
+        inputBtn.onclick = function () {
+            if(this.checked){ //如果想要变为全不选
+                for(var i=0;i<aInput.length;i++){
+                    aInput[i].checked = true; //注意应该是布尔值，不能写字符串
+                }
+            } else{
+                for(var i=0;i<aInput.length;i++){
+                    aInput[i].checked = false;
+                }
+            }
+        }
+        //点击反选
+        onOff.onclick = function () {
+            for(var i=0;i<aInput.length;i++){
+                if(aInput[i].checked){
+                    aInput[i].checked = false;
+                } else{
+                    aInput[i].checked = true;
+                }
+            }
+            isAllSelect();
+        }
+        //批量删除
+        deleteSome.onclick = function () {
+            var aInput = document.querySelectorAll('tBody input');  //静态获取方法，否则会出现连选删不掉的情况
+            for(var i=0;i<aInput.length;i++){
+                if(aInput[i].checked){
+                    for(var j=0;j<data.length;j++){
+                        if(aTr[j].index == data[j].id){
+                            data.splice(j,1);
+                        }
+                        //    var n = parseInt(tr.children[1].innerHTML);
+
+                    }
+                    tBody.removeChild(aInput[i].parentNode.parentNode);
+                }
+            }
+            console.log(data)
+            isAllSelect();
+        }
+
+    var idBtn = tab.tHead.rows[0].cells[1];
+    var ageBtn = tab.tHead.rows[0].cells[3];
+    idBtn.onOff = true;
+    ageBtn.onOff = true;
+    idBtn.onclick = function () {
+        var aTr = tBody.querySelectorAll('tr');
+        var arr = [];
+        for(var i=0;i<data.length;i++){
+            arr.push(aTr[i]);
+        }
+        if(this.onOff){
+            arr.sort(function (a,b) {
+                return b.children[1].innerHTML - a.children[1].innerHTML;
+            })
+            this.onOff = !this.onOff;
+        } else {
+            arr.sort(function (a,b) {
+                return a.children[1].innerHTML - b.children[1].innerHTML;
+            })
+            this.onOff = !this.onOff;
+        }
+        for(var i=0;i<data.length;i++){
+            tBody.appendChild(arr[i]);
+        }
+    }
+    ageBtn.onclick = function () {
+        var aTr = tBody.querySelectorAll('tr');
+        var arr = [];
+        for(var i=0;i<data.length;i++){
+            arr.push(aTr[i]);
+        }
+
+        if(this.onOff){
+            arr.sort(function (a,b) {
+                return b.children[3].innerHTML- a.children[3].innerHTML;
+            })
+            this.onOff = !this.onOff;
+        } else {
+            arr.sort(function (a,b) {
+                return a.children[3].innerHTML - b.children[3].innerHTML;
+            })
+            this.onOff = !this.onOff;
+        }
+        for(var i=0;i<data.length;i++){
+            tBody.appendChild(arr[i]);
+        }
+    }
+    </script>
+</body>
+</html>
