@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin: 0px;
+            padding:0;
+        }
+        #calendar-box{
+            margin: 0 auto;
+            width: 560px;
+            height: 240px;
+            border: 1px solid black;
+
+        }
+        #calendar-box div{
+            overflow: hidden;
+        }
+        #calendar-box #title{
+            width: 560px;
+            height: 30px;
+        }
+        #calendar-box input{
+            float: left;
+            height: 30px;
+            width: 300px;
+            line-height: 30px;
+            text-align: center;
+        }
+        #calendar-box #prev,#calendar-box #next{
+            float: left;
+            width: 80px;
+            height: 30px;
+        }
+        #calendar-box ol {
+            list-style: none;
+            height: 30px;
+            width: 560px;
+        }
+        #calendar-box ol li{
+            width: 80px;
+            text-align: center;
+            float: left;
+            list-style: none;
+        }
+        #calendar-box ul{
+            width: 560px;
+
+        }
+        #calendar-box ul li{
+            line-height: 30px;
+            text-align: center;
+            width: 80px;
+            list-style: none;
+            height: 30px;
+            float: left;
+        }
+        #calendar-box .red{
+            color: red;
+        }
+        #calendar-box .active{
+            border-radius: 50%;
+            background-color: orangered;
+            color: #ffffff;;
+        }
+    </style>
+</head>
+<body>
+    <div id="calendar-box">
+        <div id="title">
+            <input type="button" id="prev" value="上一月">
+            <input type="text">
+            <input type="button" id="next" value="下一月">
+
+        </div>
+        <ol>
+            <li>星期一</li>
+            <li>星期二</li>
+            <li>星期三</li>
+            <li>星期四</li>
+            <li>星期五</li>
+            <li>星期六</li>
+            <li>星期日</li>
+        </ol>
+        <ul>
+
+        </ul>
+    </div>
+    <script>
+        var oCalendarBox = document.getElementById('calendar-box');
+        var oP = oCalendarBox.getElementsByTagName('input')[1];
+        var prev = document.getElementById('prev');
+        var next = document.getElementById('next');
+        var oUl = oCalendarBox.getElementsByTagName('ul')[0];
+        var aLi = oUl.getElementsByTagName('li');
+        //要保证date是全局变量
+        var date = new Date();
+        //n为参数
+        var n = 0;
+        //初始化
+        Calendar(n);
+        //当输入框内容改变的时候,用户输入的格式为 2016年10月
+        oP.onchange = function (){
+            var str = oP.value;
+            str = str.replace(/年/g,'/');
+            str = str.replace(/月/g,'');
+            date = new Date(str);
+            var n = 0;
+            Calendar(n);
+        }
+        //点击换月份
+        prev.onclick = function () {
+            var n = -1
+            Calendar(n);
+        }
+        next.onclick = function () {
+            var n = 1;
+            Calendar(n);
+        }
+
+        function Calendar(n){
+            oUl.innerHTML = '';
+            date.setDate(1); //设置为上一个月1号
+            //取值--上一个月的1号是周几
+            date.setMonth(date.getMonth()+n); //当前系统上一个月
+            oP.value = date.getFullYear() + '年' + parseInt(date.getMonth()+1) + '月';
+            var firstDay = date.getDay();
+            //如果第一天为周日，则firstDay为0，要设置为7
+            if(firstDay == 0){
+                firstDay = 7;
+            }
+            //获取系统上个月的天数
+            date.setMonth(date.getMonth()+1);
+            date.setDate(0);
+            var lastDate = date.getDate();
+            console.log(firstDay,lastDate)
+            //生成内容 每个月前面的空白li
+            for(var i =0;i<firstDay-1;i++){
+                oUl.innerHTML += '<li></li>'
+            }
+            //生成每个月的天数
+            for(var i =1;i<lastDate+1;i++){
+                oUl.innerHTML += '<li>'+ i +'</li>'
+            }
+            //给周末生成红色色状态
+            var newDate = new Date();
+            var today = newDate.getDate();
+            for(var i=0;i<aLi.length;i++){
+                if(i==today + firstDay - 2){
+                    aLi[today + firstDay - 2].className += 'active';
+                    aLi[today + firstDay - 2].style.boxSizing = 'border-box';
+                }
+                if(i%7 == 5 || i%7 == 6){
+                    aLi[i].className += ' red';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
