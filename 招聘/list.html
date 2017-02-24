@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>招贤纳士-社会招聘</title>
+  <link href="css/style.css" rel="stylesheet" type="text/css"/>
+  <script src="js/data.js"></script>
+  <script>
+
+  </script>
+</head>
+
+<body>
+<div id="wrap">
+  <div class="left">
+    <h2>招贤纳士</h2>
+    <ul>
+      <!-- <li class="focus"><a href="javascript:;">社会招聘</a></li>
+      <li><a href="javascript:;">校园招聘</a></li> -->
+    </ul>
+  </div>
+  <div class="right">
+    <div class="title">
+      <img src="img/shzp.gif"/>
+    </div>
+    <div class="info">
+
+      <!--<p class="zp">
+        <span><a href="">★ 职位需求：测试工程师【社会招聘】</a></span>
+        <span>需求人数：2名</span>
+        <span class="date">2013年7月30日</span>
+      </p>
+      <p class="yq">
+        1.计算机或相关专业本科以上学历；2.从事软件测试工作3年及以上；3.具备良好的沟通能力和快速学习能力；4.精通测试策略和方法、测试用例设计；5.熟悉DB2、AIX等平台的基本操作；6.具备2年以上金...[<a
+              href="">查看详情</a>]
+      </p>
+
+      <p class="zp">-->
+
+    </div>
+    <div class="pages">
+        <span class="prev">
+          <a href="javascript:;">
+            <img src="img/pre.gif">
+          </a>
+        </span>
+        <span class="next">
+          <a href="javascript:;">
+            <img src="img/next.gif">
+          </a>
+        </span>
+      <p>
+           <!--<span class="focus">
+            <a href="javascript:;">1</a>
+          </span>-->
+
+      </p>
+
+    </div>
+
+  </div>
+  <div class="clear"></div>
+</div>
+</body>
+</html>
+<script>
+  var oPages = document.getElementsByClassName('pages')[0];
+  var oP = oPages.getElementsByTagName('p')[0];
+  //左侧导航
+  creatLeft();
+  var shBtn = document.getElementsByClassName('left')[0].getElementsByTagName('li')[0];
+  var xyBtn = document.getElementsByClassName('left')[0].getElementsByTagName('li')[1];
+  function creatLeft(){
+    var oUlLeft = document.getElementsByClassName('left')[0].getElementsByTagName('ul')[0];
+    var oLiLeftSH = document.createElement('li');
+    var oLiLeftXY = document.createElement('li');
+    var oASH = document.createElement('a');
+    var oAXY = document.createElement('a');
+    oASH.innerHTML = '社会招聘';
+    oASH.href = 'javascript:;';
+    oAXY.innerHTML = '校园招聘';
+    oAXY.href = 'javascript:;';
+    oLiLeftSH.appendChild(oASH);
+    oLiLeftXY.appendChild(oAXY);
+    oUlLeft.appendChild(oLiLeftSH);
+    oUlLeft.appendChild(oLiLeftXY);
+  }
+  //右侧渲染
+  /*aData.sh.text.forEach(function (item,index,arr) {
+    creatRigth(item);
+  })*/
+  var oInfo = document.getElementsByClassName('info')[0];
+  var hashText = location.hash;
+  var beSame = hashText.split('same=')[1];
+  //切换数据以及翻页
+  console.log(beSame)
+  if(beSame){//如果选的相同
+    var iHa = hashText.split('page=')[1].split('&')[0];
+    console.log('相同')
+  } else{
+    var iHa = 1;
+    console.log('不同')
+  }
+  console.log(iHa)
+  function tabData(t) {
+    oInfo.innerHTML = '';
+//    var iHa = iHa || 1;
+    location.hash = 'page='+iHa;
+    var newData = aData[t].text.slice(2 * (iHa - 1), 2 * iHa);
+    for (var i = 0; i < newData.length; i++) {
+      var num = 2*(iHa-1)+i;
+      creatRigth(newData[i],num);
+    }
+    //页面导航 每个页面展示两条
+    var str = '';
+    var num = Math.ceil(aData[t].text.length / 2);
+    for (var i = 0; i < num; i++) {
+      str += '<span class="foucs"><a href="javascript:;">' + (i + 1) + '</a></span>';
+    }
+    oP.innerHTML = str;
+    var aPage = oP.getElementsByTagName('span');
+    for(var i=0;i<aPage.length;i++){
+      aPage[i].index = i;
+      aPage[i].onclick = function () {
+        iHa = this.index+1;
+        location.hash = 'page='+iHa;
+      }
+    }
+  }
+  //生成主要结构
+  function creatRigth(data,num){
+    var oDivParent = document.createElement('div');
+    var oP01 = document.createElement('p');
+    oP01.className = 'zp';
+    var oSpan01 = document.createElement('span');
+    var oASpan01 = document.createElement('a');
+    oSpan01.innerHTML = '★ 职位需求'+ data.zw;
+    oSpan01.href = '';
+    var oSpan02 = document.createElement('span');
+    oSpan02.innerHTML = '需求人数'+ data.rs +'名';
+    var oSpan03 = document.createElement('span');
+    oSpan03.innerHTML = aData.date(data.sj);
+    oSpan03.className = 'date';
+    oP01.appendChild(oSpan01);
+    oP01.appendChild(oSpan02);
+    oP01.appendChild(oSpan03);
+    var oP02 = document.createElement('p');
+    var text = data.info[0].l[5].slice(0,28).concat('...');
+    oP02.innerHTML = data.info[0].l[0]+data.info[0].l[1]+data.info[0].l[2]+data.info[0].l[3]+data.info[0].l[4]+text+
+            '[<a href="content.html?s='+ t + location.hash +'&num='+ num +'">查看详情</a>]';
+    oP02.className = 'yq';
+    var oP03 = document.createElement('p');
+    oP03.className = 'zp';
+    oDivParent.appendChild(oP01);
+    oDivParent.appendChild(oP02);
+    oDivParent.appendChild(oP03);
+    oInfo.appendChild(oDivParent);
+  }
+  // search 社会/校园
+  var t = location.search.split('=')[1] || 'sh';
+  tabData(t);
+  if(t=='sh'){
+    shBtn.className = 'focus';
+  } else{
+    xyBtn.className = 'focus';
+  }
+  shBtn.onclick = function () {
+    oInfo.innerHTML = '';
+    location.hash = '';
+    xyBtn.className = '';
+    location.search = '?s=sh';
+
+  }
+  xyBtn.onclick = function () {
+    oInfo.innerHTML = '';
+    location.hash = '';
+    shBtn.className = '';
+    location.search = '?s=xy';
+  }
+  //hash设置
+
+  window.onhashchange = function () {
+//    var iHa = location.hash.split('=')[1];
+    tabData(t);
+
+  }
+</script>

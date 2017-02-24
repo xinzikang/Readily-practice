@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            width: 660px;
+            margin: 50px auto;
+        }
+
+        li {
+            width: 150px;
+            height: 150px;
+            border: 2px solid #fff;
+            float: left;
+            background-size: 100%;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<input type="button" value="随机排序" id="btn"/>
+<ul>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+<script src="move4.js"></script>
+<script>
+    var aSrc = ['img/1.jpg', 'img/2.jpg', 'img/3.jpg', 'img/4.jpg', 'img/5.jpg', 'img/6.jpg', 'img/7.jpg', 'img/8.jpg', 'img/9.jpg', 'img/10.jpg', 'img/11.jpg', 'img/12.jpg']
+    var btn = document.getElementById('btn');
+    var aLi = document.getElementsByTagName('li');
+//注意事项   判断自身不碰撞自身  if(){ continue}
+    //初始化
+    for (var i = 0; i < aSrc.length; i++) {
+        aLi[i].innerHTML = '<img style="height: 150px;width: 150px;"src="' + aSrc[i] + '">'
+        aLi[i].style.left = aLi[i].getBoundingClientRect().left + 'px';
+        aLi[i].style.top = aLi[i].getBoundingClientRect().top + 'px';
+    }
+    for (var i = 0; i < aSrc.length; i++) {
+        aLi[i].style.position = 'absolute';
+    }
+    //碰撞检测
+    for (var i = 0; i < aLi.length; i++) {
+        aLi[i].index = i;
+        aLi[i].onmousedown = function (ev) {
+            var aNewLi = aLi;
+            aNewLi = Array.prototype.slice.call(aNewLi);
+            aNewLi.splice(this.index,1);
+            var num = null;
+            var _this = this;
+            var posX = ev.clientX;
+            var posY = ev.clientY;
+            var oLiPosX = parseFloat(this.style.left);
+            var oLiPosY = parseFloat(this.style.top);
+            var distanceX = posX - oLiPosX;
+            var distanceY = posY - oLiPosY;
+            document.onmousemove = function (ev) {
+                num = 0; //记录一共碰撞到了几个
+                var MaxNum = +Infinity;
+                var indexNum = null;
+                var nowPosX = ev.clientX;
+                var nowPosY = ev.clientY;
+                _this.style.top = (nowPosY - distanceY) + 'px';
+                _this.style.left = (nowPosX - distanceX) + 'px';
+                //记录中心点
+                var circleX = nowPosX - distanceX +_this.offsetWidth/2;
+                var circleY = nowPosY - distanceY+_this.offsetHeight/2;
+                //被点击li的当前位置
+                var oLiPos = _this.getBoundingClientRect();
+                for (var i = 0; i < aNewLi.length; i++) {
+                    aNewLi[i].pos = aNewLi[i].getBoundingClientRect();
+                    if (!(oLiPos.left > aNewLi[i].pos.right || oLiPos.right < aNewLi[i].pos.left || oLiPos.top > aNewLi[i].pos.bottom || oLiPos.bottom < aNewLi[i].pos.top )) {
+                        //检测碰撞
+                        var nowCircleX = aNewLi[i].pos.left + aNewLi[i].offsetWidth/2;
+                        var nowCircleY = aNewLi[i].pos.top + aNewLi[i].offsetHeight/2;
+                        var circleDistence = Math.sqrt(Math.pow(nowCircleX-circleX,2)+Math.pow(nowCircleY-circleY,2));
+                        if(MaxNum > circleDistence){
+                            MaxNum = circleDistence;
+                            indexNum = aNewLi[i].index; //取到最小的index
+                        }
+                        aNewLi[i].style.borderColor = 'red';
+                        num++;
+                    } else {
+                        aNewLi[i].style.borderColor = '#fff';
+                    }
+                }
+//                console.log(MaxNum,indexNum)
+                document.onmouseup = function () {
+                    //清除所有红框
+                    for(var i=0;i<aLi.length;i++){
+                        aLi[i].style.borderColor = '#fff';
+                    }
+                    //判断是否需要交换位置，不交换位置则回到原处
+                    if (num == 0) {
+                        move(_this, {left: oLiPosX, top: oLiPosY}, 500, 'linear')
+                    } else {
+                        var oldPosX = parseFloat((aLi[indexNum].style.left));
+                        var oldPosY = parseFloat((aLi[indexNum].style.top));
+                        console.log(oldPosX,oldPosY)
+                        move(_this, {left: oldPosX, top: oldPosY}, 500, 'linear')
+                        move(aLi[indexNum], {left: oLiPosX, top: oLiPosY}, 500, 'linear')
+                    }
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                }
+            }
+            return false;
+        }
+    }
+</script>
+</body>
+</html>

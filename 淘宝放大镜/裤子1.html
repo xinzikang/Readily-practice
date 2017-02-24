@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>无标题文档</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #div1 {
+            width: 312px;
+            margin: 50px auto;
+            position: relative;
+        }
+
+        .small {
+            width: 310px;
+            height: 310px;
+            border: 1px solid #cdcdcd;
+            overflow: hidden;
+            left: 0;
+            top: 0;
+            position: absolute;
+        }
+
+        .mark {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #ff0000;
+            filter: alpha(opacity:0);
+            opacity: 0;
+            z-index: 2;
+            cursor: move;
+        }
+
+        .float1 {
+            width: 100px;
+            height: 100px;
+            background: #fede4f;
+            border: 1px solid #aaa;
+            filter: alpha(opacity:50);
+            opacity: 0.5;
+            position: absolute;
+            display: none;
+        }
+
+        .big {
+            width: 310px;
+            height: 310px;
+            border: 1px solid #cdcdcd;
+            overflow: hidden;
+            position: absolute;
+            left: 320px;
+            top: 0;
+            display: none;
+        }
+
+        .big img {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #list {
+            width: 288px;
+            height: 46px;
+            overflow: hidden;
+            position: absolute;
+            left: 10px;
+            top: 320px;
+        }
+
+        #list ul {
+            position: absolute;
+            width: 200%;
+            left: 0;
+        }
+
+        #list li {
+            list-style: none;
+            float: left;
+            padding: 4px;
+            overflow: hidden;
+            width: 40px;
+            height: 40px;
+        }
+
+        #list li img {
+            border: 1px solid #cdcdcd;
+        }
+
+        #list .active img {
+            border: 1px solid #ff0000;
+        }
+
+        #left {
+            width: 10px;
+            height: 45px;
+            display: block;
+            background: url(images/left.gif) no-repeat;
+            position: absolute;
+            top: 322px;
+            left: 0;
+            cursor: pointer;
+        }
+
+        #right {
+            width: 10px;
+            height: 45px;
+            display: block;
+            background: url(images/right.gif) no-repeat;
+            position: absolute;
+            top: 322px;
+            left: 300px;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body>
+<div id="div1">
+    <div class="small">
+        <div class="float1"></div>
+        <div class="mark"></div>
+        <img src="images/m1.jpg" width="310" height="310" id="img2"/>
+    </div>
+    <div id="big" class="big">
+        <img src="images/b1.jpg" id="img1"/ >
+    </div>
+    <span id="left"></span>
+    <span id="right"></span>
+    <div id="list">
+        <ul>
+            <li class="active"><img src="images/s1.jpg"/></li>
+            <li><img src="images/s2.jpg"/></li>
+            <li><img src="images/s3.jpg"/></li>
+            <li><img src="images/s4.jpg"/></li>
+            <li><img src="images/s5.jpg"/></li>
+            <li><img src="images/s6.jpg"/></li>
+            <li><img src="images/s7.jpg"/></li>
+            <li><img src="images/s8.jpg"/></li>
+            <li><img src="images/s9.jpg"/></li>
+            <li><img src="images/s10.jpg"/></li>
+        </ul>
+    </div>
+</div>
+<script>
+    var oBox = document.getElementById('div1');
+    var oSmall = document.getElementsByClassName('small')[0];
+    var oFloat = document.getElementsByClassName('float1')[0];
+    var oImgMid = document.getElementById('img2');
+    var oBig = document.getElementsByClassName('big')[0];
+    var oImgBig = document.getElementById('img1');
+    var btnLeft = document.getElementById('left');
+    var btnRigth = document.getElementById('right');
+    var oUl = document.getElementById('list').getElementsByTagName('ul')[0];
+    var aImg = oUl.getElementsByTagName('img');
+    var aLi = document.getElementsByTagName('li');
+    var body = document.getElementsByTagName('body')[0];
+    var n = 0; //记录第一个显示的是第几张图片
+    //固定的数据
+    var iBoxL = oBox.offsetLeft;
+    var iBoxT = oBox.offsetTop;
+
+    oSmall.onmousemove = function (ev) {
+        //悬浮框显示
+        oFloat.style.display = 'block';
+        var iScrollY = document.body.scrollTop || document.documentElement.scrollTop;
+        var iFloatHei = oFloat.offsetHeight;
+        var iFloatWid = oFloat.offsetWidth;
+        var iSmallWid = oSmall.offsetWidth;
+        var iSmallHei = oSmall.offsetHeight;
+        oFloat.style.left = ev.clientX-iBoxL-iFloatWid/2 + 'px';
+        oFloat.style.top = ev.clientY+iScrollY-iBoxT - iFloatHei/2 + 'px';
+        if (oFloat.offsetLeft < 0) {
+            oFloat.style.left = 0 + 'px';
+        }
+        if (oFloat.offsetLeft > iSmallWid - iFloatWid) {
+            oFloat.style.left = iSmallWid - iFloatWid + 'px';
+        }
+        if (oFloat.offsetTop < 0) {
+            oFloat.style.top = 0 + 'px';
+        }
+        if (oFloat.offsetTop > iSmallHei - iFloatHei) {
+            oFloat.style.top = iSmallHei - iFloatHei + 'px';
+        }
+        //计算比例
+        var scaleX = oFloat.offsetLeft/(iSmallWid-iFloatWid);
+        var scaleY = oFloat.offsetTop/(iSmallHei-iFloatHei);
+//放大的图片显示
+        oBig.style.display = 'block';
+        var iBigWid = oBig.offsetWidth;
+        var iBigHei = oBig.offsetHeight;
+        var iImgBigHei = oImgBig.offsetHeight;
+        var iImgBigWid = oImgBig.offsetWidth;
+        oImgBig.style.left = -(iImgBigWid-iBigWid)*scaleX + 'px';
+        oImgBig.style.top = -(iImgBigHei-iBigHei)*scaleY + 'px';
+    }
+oSmall.onmouseout = function () {
+    oFloat.style.display = 'none';
+    oBig.style.display = 'none';
+}
+    for(var i=0;i<aLi.length;i++){
+        aLi[i].index = i;
+        aLi[i].onclick = function () {
+            n = this.index;
+            tab(n);
+        }
+    }
+    btnLeft.onclick = function(){
+        n--;
+        if(n<=0){
+            n=0;
+        }
+        tab(n)
+        console.log(Math.abs(oUl.offsetLeft),aLi[n].offsetLeft )
+        if(Math.abs(oUl.offsetLeft) - aLi[n].offsetLeft > 0){
+            oUl.style.left = (oUl.offsetLeft+48) + 'px';
+        }
+    }
+    btnRigth.onclick = function () {
+        n++;
+        if(n>=aLi.length-1){
+            n = aLi.length - 1;
+        }
+        tab(n);
+        /*if(n>=6){
+            oUl.style.left = -(n-5)*48 + 'px';
+        }*/
+        if( aLi[n].offsetLeft - Math.abs(oUl.offsetLeft) >= 288){
+            oUl.style.left = -(aLi[n].offsetLeft - 288+48) + 'px';
+        }
+
+    }
+    function tab(n){
+        for(var i=0;i<aLi.length;i++){
+            aLi[i].className = '';
+        }
+        oImgMid.src = 'images/m'+ (n+1) +'.jpg';
+        oImgBig.src = 'images/b'+ (n+1) +'.jpg';
+        aLi[n].className = 'active';
+    }
+</script>
+</body>
+</html>
