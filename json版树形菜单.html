@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <style>
+        #oUl li ul {
+            display: none;
+        }
+
+        #oUl li ul.show {
+            display: block;
+        }
+
+        #oUl li ul.hide {
+            display: none;
+        }
+
+        #oUl li h3 span {
+            padding: 0px 10px;
+        }
+
+        #oUl li h3.padL {
+            padding-left: 30px;
+        }
+
+        li {
+            list-style: none;
+        }
+    </style>
+
+</head>
+
+<body>
+<ul id="oUl"></ul>
+</body>
+<script>
+    var arr = [
+        {
+            title: "第一级菜单",
+            child: [
+                {title: "第二集菜单"},
+                {
+                    title: "第二集菜单",
+                    child: [
+                        {title: "第三集菜单"},
+                        {
+                            title: "第三集菜单",
+                            child: [
+                                {title: "第四集菜单"},
+                                {title: "第四集菜单"},
+                                {title: "第四集菜单"}
+                            ]
+                        },
+                        {title: "第三集菜单"}
+                    ]
+                },
+                {
+                    title: "第二集菜单",
+                    child: [
+                        {title: "第三集菜单"},
+                        {title: "第三集菜单"}
+                    ]
+                }
+            ]
+        },
+        {
+            title: "第一级菜单",
+            child: [
+                {title: "第二集菜单"},
+                {
+                    title: "第二集菜单",
+                    child: [
+                        {title: "第三集菜单"},
+                        {
+                            title: "第三集菜单",
+                            child: [
+                                {title: "第四集菜单"},
+                                {title: "第四集菜单"},
+                                {title: "第四集菜单"}
+                            ]
+                        },
+                        {title: "第三集菜单"}
+                    ]
+                },
+                {
+                    title: "第二集菜单",
+                    child: [
+                        {title: "第三集菜单"},
+                        {title: "第三集菜单"}
+                    ]
+                }
+            ]
+        },
+        {
+            title: "第一集菜单",
+            child: [
+                {title: "第二集菜单"},
+                {title: "第二集菜单"}
+            ]
+        }
+    ];
+    var oUl = document.getElementById('oUl');
+    arr.forEach(function (item) {
+        creatDom(item, oUl);
+    });
+    function creatDom(json, obj) {
+        var oLi = document.createElement('li');
+        var oH3 = document.createElement('h3');
+
+        oH3.innerHTML = json.title;
+        oLi.appendChild(oH3);
+        if (json.child) {
+
+            var oUlSon = document.createElement('ul');
+            oLi.appendChild(oUlSon);
+            oH3.onclick = function () {
+                if(getComputedStyle(oUlSon).display == 'none'){
+                    oUlSon.style.display = 'block';
+                } else{
+                    oUlSon.style.display = 'none';
+                }
+            };
+            json.child.forEach(function (item) {
+                creatDom(item, oUlSon)
+            })
+        }
+        obj.appendChild(oLi);
+    }
+
+
+</script>
+</html>
