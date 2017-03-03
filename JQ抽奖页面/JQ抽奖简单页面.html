@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="jq1.72.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #box {
+            height: 240px;
+            width: 240px;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        #box div {
+            margin-right: 10px;
+            height: 50px;
+            width: 50px;
+            background-color: #e27f07;
+            position: absolute;
+            color: #fff;
+            font-size: 12px;
+            line-height: 50px;
+            text-align: center;
+        }
+
+        .active {
+            background-color: blue !important;
+        }
+    </style>
+</head>
+<body>
+<div id="box">
+    <div>没有中奖</div>
+    <div>一等奖</div>
+    <div>二等奖</div>
+    <div>没有中奖</div>
+    <div>没有中奖</div>
+    <div>三等奖</div>
+    <div class="bottomDiv">一等奖</div>
+    <div class="bottomDiv">没有中奖</div>
+    <div class="bottomDiv">没有中奖</div>
+    <div class="bottomDiv">三等奖</div>
+    <div>二等奖</div>
+    <div>没有中奖</div>
+</div>
+<button>开始</button>
+</body>
+</html>
+<script>
+    //定位布局
+    $.each($('#box').find('div:lt(4)'), function (i, n) {
+        $('#box').find('div:lt(4)')[i].style.top = '0px';
+        $('#box').find('div:lt(4)')[i].style.left = i * 60 + 'px';
+    });
+    $('div:eq(5)').css({top: 60, left: 180});
+    $('div:eq(6)').css({top: 120, left: 180});
+    $.each($(".bottomDiv"), function (i, n) {
+        $(".bottomDiv")[3 - i].style.top = '180px';
+        $(".bottomDiv")[3 - i].style.left = i * 60 + 'px';
+    });
+    $('div:eq(11)').css({top: 120, left: 0});
+    $('div:eq(12)').css({top: 60, left: 0});
+    //逻辑部分
+    $('button').click(function () {
+        var n = 0;
+        var m = 1;
+//        var t = 20;
+        var timer = setInterval(function () {
+            $.each($('#box div'), function (i) {
+                $('#box div')[i].className = '';
+            });
+            $('#box div')[n % 12].className = 'active';
+            n++;
+            m++;
+            if (10 * m > 1000) {
+                clearInterval(timer);
+            }
+        }, 10*m);
+
+    })
+</script>
