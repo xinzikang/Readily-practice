@@ -70,8 +70,10 @@
     $('button').click(function () {
         var n = 0;
         var m = 1;
-//        var t = 20;
-        var timer = setInterval(function () {
+        var text = null;
+        var timer = null;
+        clearInterval(timer);
+        timer = setInterval(function () {
             $.each($('#box div'), function (i) {
                 $('#box div')[i].className = '';
             });
@@ -80,6 +82,13 @@
             m++;
             if (10 * m > 1000) {
                 clearInterval(timer);
+                $('#box div').each(function (i,n) {
+                    if(this.className == 'active'){
+                        text = $(this).html();
+                        return;
+                    }
+                });
+                alert(text)
             }
         }, 10*m);
 
