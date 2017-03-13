@@ -231,3 +231,20 @@ function ajaxM(json){
         }
     }
 }
+
+//设置cookie
+function setCookie(key,value,time) {
+    if(time){
+        var date= new Date();
+        date.setDate(date.getDate() + time);
+        document.cookie = key + '=' + value + ';expires=' + date;
+    } else{
+        document.cookie = key + '=' + value;
+    }
+
+}
+
+//删除cookie
+function removeCookie(key,value) {
+    setCookie(key,value,-1);  //设置过期时间比当前时间小即可
+}
