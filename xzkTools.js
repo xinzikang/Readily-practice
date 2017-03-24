@@ -79,8 +79,8 @@ function trim(str) {
     }
     return str;
 }
-//选取元素$
-function $(name, obj) {
+//选取元素getEl
+function getEl(name, obj) {
     var obj = obj || document;
     //name # . tag
     //判断参数是哪种类型
@@ -247,4 +247,63 @@ function setCookie(key,value,time) {
 //删除cookie
 function removeCookie(key,value) {
     setCookie(key,value,-1);  //设置过期时间比当前时间小即可
+}
+
+//jsonp
+function jsonp(json){
+  //配置默认的参数
+  var opt = {
+    url:json.url || '',
+    data:json.data||{},
+    success:json.success || function(){},
+    callback:json.callback || 'callback',
+    error:json.error || function(){}
+  }
+  //为了序列化操作的
+  var arr = [];
+  //每次请求的开关
+  var onOff = true;
+  //创建一个随机的函数名。
+  var fnName = 'miaov'+Math.random();
+  fnName = fnName.replace('0.','')+'_'+ (+new Date());
+
+  //请求成功执行的函数
+  window[fnName] = function(data){
+    opt.success(data);
+    onOff = false;//说明本次请求为成功
+  };
+  //当5秒之后，如果onOff任然为真，说明没有进入回调，即失败
+  setTimeout(function(){
+    if(onOff){
+      opt.error();//失败调用失败的回调函数即可
+    }
+  },5000);
+
+  //将data这个对象加一个callback=函数名的字段
+  opt.data[opt.callback] = fnName;
+
+    /*
+     {
+     wd:123
+     cb:fn1
+     }
+
+     */
+  //序列化操作2
+  for(var attr in opt.data){
+    arr.push(attr +'='+ encodeURI(opt.data[attr]));
+  }
+  //wd=miaov&cb=fn1
+  opt.data = arr.join('&');//序列化操作3
+//		console.log(opt.url+'?'+'cb=fn1&'+opt.data);
+  //创建script
+  var oS = document.createElement('script');
+  //拼接url给src
+  oS.src = opt.url + '?' + opt.data;
+//		oS.src = opt.url+'?'+opt.callback+'='+fnName+'&'+opt.data;
+  //插入
+  document.getElementsByTagName('head')[0].appendChild(oS);
+  //删除
+  document.getElementsByTagName('head')[0].removeChild(oS);
+
 }

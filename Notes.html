@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="xzkTools.js"></script>
+    <script src="../vue/webapp书城/post-detail.js"></script>
+</head>
+<body>
+    <!--12.05
+    Date接受的参数是毫秒数，为了简化这一过程，JS提供了两个（会在后台自动调用的）方法Date.parse(参数为一个表示日期的字符串)
+                            和Date.UTC(年，月，日。。)
+    设置时间 三种格式 var date = new Date(2016,10,1,10,10,10)   月从0开始，数字格式
+                     var date = new Date('Jan 01 2016 12:10:50')   字符串格式 或('Jan,01,2016,12:10:50')
+                     var date2 = new Date(date)   对象格式
+                     //五种格式
+                    new Date("January 12,2006 22:19:35");
+                    new Date("January 12,2006");
+                    new Date(2006,0,12,22,19,35);
+                    new Date(2006,0,12);
+                    new Date(1137075575000);
+                    date.valueOf()返回日期的毫秒数 与getTime返回的值相同， 因此可以用比较操作符 date1<date2
+            date.getFullYear 与date.getYear（从1900年开始算过了多少年） 的区别
+            for(var i=0,j=0; i<6,j<10; i++,j++)  注意中间的判断条件 逗号，总是取后边的值
+
+            如何获取一个月份的天数？
+            date.setMonth(12);//先设置为下一个月份
+            date.setDate(0) //载设置日期为0-->
+
+<!--12.09
+    input.onchange = function(){}  当表单失去焦点时候，内容改变 时触发
+    select.onchange = function(){}  当下拉菜单改变时，失焦时触发事件-->
+    <p>
+    12.12  str.length 只能读取，不能设置
+            字符串方法都不改变原字符串
+            str.charAt(index)只能查找，不能设置；没有这一位置时，返回值为空的字符串
+            str.charCodeAt(index) a-z:97-122; A-Z:65-90; 0-9:48-57;
+
+            str.indexOf（searchValue,index） 不传参或者找不到时返回-1；从左向右找，故index可以设置为负值，与设置0无区别
+            str.lastIndexOf                 传入index为负值时，等同于传入0
+
+            str.split()  分割字符串，返回一个数组
+            arr.join()  将数组用分隔符链接成字符串,不传参时，默认以逗号分隔
+            str.toLowerCase() 该方法不改变原来的字符串，即该操作需要用一个变量存起来使用
+            str.toUpperCase()
+    12.13   str.slice( begin,[end])  不传参，返回整个字符串；区间为左闭右开；当截取不到时（即end < begin），返回空的字符串；
+                                     但是可以接受负数（splice（-1）），即从倒数第一位截取到最后一位。返回值为被截取的字符串；
+            str.substring(begin,[end])  当end < begin时，会自动互换，仍然可以截取到字符串；接受负数时，从左向右截取整个字符串
+            str.sunstr(begin,[length])  当截取不到时，返回空字符串；接收-1时，是从字符串最后一位开始截取
+
+            str.trim()去掉字符串前后空格
+
+            字符串与正则
+            str.match(re),str.replace(re,replaceStr),str.search(re),str.split(re)
+    12.15   obj.classList.add()   H5方法，低版本不兼容
+            obj.classList.remove()
+    12.16   数组：当访问长度超出时，为undefined
+            不要使用arr.length方法操作数据（arr.length = 2），这不是标准方法
+            arr.push()返回值是一个数字，表示新数组添加之后的长度
+            arr.unshift()向数组添加的时候，可以是多个;返回值是新数组添加之后的长度
+            arr.pop()  返回值是删除的元素
+            arr.shift()
+            arr.reverse()  返回值为反转后的数组
+            arr.sort()改变原数组 //排序机制，按位次一次去除两位进行比较，根据a-b是否大于0来判断两位数数否交换位置
+                    随机打乱数组内的数字
+                    arr.sort(function(a,b){
+                        return Math.random()-0.5;
+                    })
+            arr.splice(begin,length,items) 改变原数组
+            以上方法都可以改变原数组
+
+            arr.concat() 返回值是添加以后的新数组，但是原来的数组不会改变
+                        该方法与push的区别 arr.concat([4,5,6]) -> [1,2,3,4,5,6]
+            arr.slice(begin，[end])截取数组片段，返回一个新的数组，原数组不变，可接受负数，截取不到使返回空数组
+        //一下为ES5语法
+            arr.forEach(function(a,b,c){//forEach方法没有返回值
+                a -> 数组内的value
+                b -> 数组的下标
+                c -> 循环的整个数组本身
+            })
+            var arr=[1,2,3,4]
+            arr.every(function(a,b,c){  //遍历数组，如果每一位元素都满足条件，返回true，否则返回false
+                return a>2;  //一定要有return ，参数类型与forEach的参数相同
+            })
+            arr.filter(function(a){  //不改变元素组
+                return a>2;  //返回值为满则条件的新数组
+            })
+            arr.map(function(a){ //遍历后，将每个值判断的结果返回新的数组
+                return a>2;  // [false,false,true,true]
+            }))
+            arr.some(function({ //遍历后，如果有一个满足条件，返回true，否则返回false
+                return a>2;
+            }))
+            arr.reduce(prev,cur,index,array)迭代数组每一项，最终构建一个返回值 arr.reduceRight()
+12.19
+            json 不支持undefined数据格式，但可以支持其他五种，字符串只能是""（双引号），类型是字符串
+            原来写法{ name:'xiaoming',age:3}
+            json写法 '{ "name":"xiaoming","age":3}'
+            console.log( JSON ) 需要大写  只有两种方法：JSON.parse(字符串中有undefined类型时，会报错) stringify（遇到undefined时，自动跳过该属性）
+    12.22
+            document 本质上是字符串，页面在解析时，会将标签解析为对象，以便使用对象下的各种方法来操作标签
+            节点类型node.nodeType  1:元素节点 2：属性节点 3：文本节点 8：注释节点（command）9：document节点
+            nodeName -> 元素类型：DIV 大写，字符串类型；属性类型：id 小写；文本类型：#text；注释类型：#commend；document类型：#document
+            childNodes:标准下,获取到所有第一级子节点；非标准下，获取第一级的元素节点
+            children：获取所有从第一级元素节点（但并不是标准方法）
+            oFirst = firstElementChild(标准方法) || firstChild(ie8及以下。但是标准/非标准都可以识别，只是包含的节点类型不同)
+12.26       offsetParent 定位父级（position非static）
+            offsetLeft 自身边框到定位父级边框的距离  但是在FF下，当定位父级有border和overf:XXX同时存在时，offsetLeft不包括父级的border宽度。解决方法：再套一层div，拆分border和overflow
+                没有单位,若没有定位父级，自身也没有定位，到html的距离，body自带8pxmargin,注意区别      ；
+            clientWidth/clientHeigth 没有单位  width+padding（元素内容占位宽）document.documentElement.clientWidth 内嵌元素的clientWeidth=0
+            offsetWidth/offsetHeigth 没有单位  width+padding+border(元素占位宽)
+            div.getBoundingClientRect() -> left,top,right,bottom,width,height.注意bottom和right的区别，宽高和offsetWidth的值一样
+            页面滚动高度scrollY = document.body.scrollTop || document.documentElement.scrollTop || window.pageYOffset || 0
+            浏览器可视区高度 = window.innerHeight || document.documentElement.clientWidth
+            操作属性：. [] getAttribute（只有这种方法可以获取写在行间的自定义属性，该方法不能取到用js添加的属性）
+                            setAttribute('a','1');
+    12.27
+            appendChild()，insetBefore（）如果插入的是已经存在的节点，相当于剪切再插入、
+            remove（）replace()如果替换的是已经存在的节点，也相当于剪切
+            node.cloneNode(布尔值) 可以克隆：html和css/class   不可以克隆的：js自定义属性，事件,可以克隆行间自定义属相
+                                    true深度克隆：包括子节点
+                                    false：只能克隆自身，不能克隆子节点（元素节点/文本节点）
+12.28
+            表格的DOM操作   tab.tHead.rows[0].cells[1] //注意是否需要通过下标取值
+                            tab.tBodies[0].rows[0].cells[1]
+            表单的DOM操作   getElementByName()
+    1.3   BOM操作
+            window.open(URL,name,specs)  不能写在全局，写在全局会被拦截，所有参数都是字符串；返回值是新打开窗口的window对象
+                URL不传  默认为打开空白页 abort:blank;传参时，写协议名 http:// 不写的话默认打开本地网址
+                name:打开方式 _blank:打开新窗口 ； _self 打开当前窗口； _top 打开顶层框架； _parent 父级框架
+                      也可以写框架的name 'iframe1'
+                        window.top/window.parent都是对象，都指向window。嵌套关系时，top找的都是最外层的框架的window；parent找的是父级的window
+                specs 规格 。只有在新窗口打开有效，'width=100px,height=100px'注意用逗号分隔
+            close()  window.close()关闭window指向的窗口；在FF下，只能关闭使用open()方法打开的新窗口，不能关闭当前打开的窗口
+            navigator浏览器信息对象 navigator.urerAgent 浏览器版本 Chrome/FireFox
+            location地址栏对象，其中各个属相即可获取也可设置
+                location.href获取的是绝对路径,设置时效果同等于a。所有的都是字符串格式
+                location.search查寻信息 //'www.baidu.com?s=xzk#page=1'  查询信息为?s=xzk ?和#之间的内容，包括?
+                location.hash锚信息(除该属性意外，剩下的都会刷新页面，除该属性外，设置操作都不能放在全局，否则会无限刷新，应该用触发触发) #后面的内容
+                        window.onhashchange = function(){}
+    1.4     可视区宽高：不考虑兼容性，移动端 window.innerWidth/innerHeigth  ie9+ 该方法是标准的方法
+                        低版本可以用 document.documentElemrnt.clientWidth
+            window.pageXOffset获取滚动天距离的标准方法
+            chrome document.body.scrollTop
+            其他 document.documentElement.scrollTop  在Chrome下可以获取到，但是一直是0
+            scrollTo(X,Y)
+            clientHeigth   offsetHeigth  scrollHeigth(跟clientHeigth相比，谁大取谁的值box.scrollHeigth)
+            图片的延时加载
+1.6       事件
+            ui事件（非用户交互操作事件例如onload）
+            鼠标事件：(回车触发单击事件：a/button，鼠标抬起时才会触发单击事件，一般单击事件是鼠标左键，中键根据浏览器有差异)
+                    onmouseup/onmousedown->onclick  onmouseover->onmouseenter  onmouseout->onmouseleave不会冒泡 onmousemove 根据时间间隔触发
+                    onmousewheel  ondbclick(会触发2次click事件，避免这两个事件绑定在同一个元素上，也可以用延时定时器来避免这个问题)
+            键盘事件：只有可输入的元素(表单和document)才有键盘事件。 onkeydown->onkeypress->onkeyup按住不放连续触发前两个事件，三个功能键不能触发press事件
+            焦点事件：可交互性的元素才有焦点事件，最开始页面焦点在document，且页面中只有一个焦点 onfocus onblur 点击切换 tab切换 js切换focus()/blur()方法
+            表单事件：onsubmit刷新页面 onreset重置 onchange 内容改变，在失焦的时候触发 oninput 内容改变时触发，每次按下键盘时自动检测是否与之前的内容相同
+                    方法 submit(该方法不会触发onsubmit事件) reset()  select()选中文字  placeholder提示文字兼容性 用上下两层结构模拟
+1.7         事件对象event 只有在事件调用时才有事件对象，函数的直接调用没有该对象
+                    FF 认为event是个变量，不是对象  IE和chrome可以拿到这个对象  故兼容写法：事件调用函数第一个形参就是事件对象，ie低版本不识别 ev = ev || event;
+
+                    鼠标事件对象 shfitKey clientX 键值which 左1 中2 右3;
+    1.9     键盘事件对象 ev.keyCode 键盘事件独有，不区分大小写  ev.which 所有输入设备都有这个属性
+                        常用的 回车13 空格32 左37 上38 右39 下40
+                        onkeydown 在按下的瞬间触发，故拿不到刚输入的值，可以用延时定时器或者onkeyup/oninput解决
+                        坦克大战：解决键盘按下延时问题：使用代理中间变量
+            事件源 ev.target  事件委托
+    1.10    事件绑定 el.addEventListener('事件名',函数,是否在捕获阶段调用)  有名函数在绑定时，若绑定了两个相同的有名函数，，则会覆盖，值执行一次，区别于匿名函数
+                    匿名函数不能解绑，因为找不到匿名函数
+            解绑事件 el.removeListener()  必须是同函数的同事件同阶段
+            事件流（事件模型） 事件触发时执行的流程：捕获阶段，冒泡阶段   on绑定的事件默认在冒泡阶段执行
+            阻止冒泡  ev.cancelBubble = true 默认值是false
+                    ev.stopPropagation()阻止后面进程，后面的无论捕获冒泡都不执行
+            阻止默认 return false  ev.preverntDafault()  通过on的形式绑定的事件，这两中解绑都可以；但是通过addEventListener绑定的事件，return false 无效
+            oncontextmenu 右键菜单
+    1.16    鼠标滚轮事件
+            chrome/ie onmousewheel  ev.wheelDelta上 120 下 -120
+            ff        document.addEventListenr('DomMouseScroll',fn)  只能通过DOM2级绑定该事件 ev.detail 上 -3 下3
+    2.15    git:版本控制工具
+                svn和git区别  svn 共享小范围的（公司级别） 必须联网 上传到中央服务器，再从服务器中下载下来 ，集成式的（集成在中央服务器中）
+                            git 分布式 不需联网就可控制版本，将本机当作服务器。别人用的时候，需要从github下载，（远程仓库，开源项目）相当于大型的svn
+            命令行操作 ls(看子目录) cd d:(进入目录) cd ..(退出目录) cd git_class(tab键可自动补全)  git clone http:// (下载版本)
+                    git status(查看状态) git add 文件名(从工作区到暂存区)  git commit -m "注释"（从暂存区到版本区）  暂存区是过度层，避免误操作
+                                        git add .(使用.表示批量操作)    git commit -a -m "注释" （从工作区跳过缓存区直接到版本区）
+                    对比 git diff(工作区与暂存区的差别)   git diff --cached(暂存区与版本区差别)  git diff master(工作区与版本区)
+                    撤销  git reset HEAD 文件名(从暂存区撤销到工作区)  git checkout -- 文件名(将工作区的代码撤销到（优先暂存区，没有暂存区则撤销到版本区）)
+                        如果修改多个文件之后，在条件版本库时有遗漏，可以通过add 将遗漏的文件方法暂存区，再用 git commit -m "" --amend 可将原版本撤销，并将遗漏的文件合并为一个新的版本提交
+                    删除 git rm 文件名 (手动删除了工作区的文件，也想删除缓存区的文件，用该命令)
+                        git rm -f 文件名(命令行同时删除工作区与暂存区的文件，不是手动删除)
+                        git rm --cached 文件名(只删除缓存区，不删除工作区)
+                        git rm -rf 文件夹名（删除整个文件夹）
+                    恢复 git checkout 文件名(恢复单个文件)
+                        git reset --hard 历史记录编码 （恢复版本）
+                        git relog(产看版本记录)
+                    远程仓库 git remote(查看远程仓库)
+                            git remote -v(查看双串下载地址)
+                            git remote add(创建仓库名字)
+                            git push origin master(上传)
+                    分支 使用场景 ：开发不稳定版本时；开发生命周期较短的项目时； 多人协作开发
+                            git branch(查看分支并且*表示当前分支)
+                            git branch 分支名字（创建分支）
+                            git checkout dowm (切换分支到down)
+                            git checkout -b 分支名 （新建并迁移）
+                            git branch -D 分支名（强行删除分支）
+                            git branch -d 分支名（删除已经合并的分支）
+                            git merge 分支名（合并分支，合并以后原来的分支还存在）
+                            git branch --merged(查看有几个分支被合并)
+                            git branch --no--merged(查看有几个分支没有被合并)
+                    多人协作开发  1.找合伙人  进入github，点击New collaborator 输入小伙伴的名字，等待加入
+                                2.开发遇到冲突 提交时遇到冲突：
+                                    先将远程仓库的代码拉取 git fetch ;
+                                    对比差异  git diff master origin/master；
+                                    手工合并两边代码 git merge origin/master;
+                                    手工删除不要的代码，并重新提交到远程仓库
+                    当自己没有开发权限的时候，也想参与别人项目：
+                                fork别人的项目，自己的github中就有了这个项目；
+                                将项目clone，并修改提交，发送修改合并请求（在项目导航栏中点击pull requests，点击creat pull request，留言发送）
+                    避免每次克隆别人镜像的东西：
+                                删除已经存在的fork；
+                                重新fork；
+                                直接git pull即可。
+    2.17 正则  parseint('') -> NAN  isNaN( '' ) -> 0
+                str[0]低版本不靠谱 str.charAt()无兼容问题
+                re.text(str)正则的方法，若正则成立，返回布尔值
+                str.match(re) 字符串方法 将匹配到的字符放到一个数组中，并返回该数组（是懒惰模式，需要设置i或g）
+                            返回这个数组的属性：index  input length（值为1）
+                            match中有子项，如果匹配出来的结果只有一项，则返回数组中第一个为整个匹配到的字符串，第二项为第一个子项匹配到的字符，多个子项类推
+                                        如果匹配出来的数组有多个匹配项，则没有子项等的输出
+                            找不到 返回null
+                str.search(str||re)  str.indexOf  查找字符串  都是返回index值  找不到返回-1
+                str.replace(str||re,something||function($0，$1,$2){
+                        //每成功匹配一次，就会执行该函数，re中没有捕获的情况下：第一个参数就是本次匹配到的内容，第二个是当前匹配的索引，第三个是总的字符串
+                                                    re中有捕获的情况下
+                       return 。。。
+                    })
+                \w 数字字母下划线
+                /（a）\n/ 子项重定向 （重复第几个子项）
+                功能型/酷炫/移动端
+    2.20 str.match(/a(b|d|e)c/g)  或  str.match(/a[bde]c/g)
+            /a[^bd]c/g 非bd ^为一组
+            [\u4e00-\u9fa5]中文的范围
+        量词：最少没有，最多1个 {0,1} == ?
+            最少1个，最多不限  {1,}  == +
+            最少0个，最多不限  {0,}  == *
+            .除了\n的任意字符
+            \d \D  注意都需要转义
+            \w \W
+            \n
+            \s \S
+            \b \B 边界 不适用于中文
+    2.21 面向对象
+            new 运算符 专门用来运算函数的，相当于调用了函数 new Date / new Date() 其中括号是用来传参的，不传参是可以省略
+            new的运算过程：1.相当于在函数内部创建了一个对象
+                        2.将this绑定到这个对象
+                        3.返回这个对象
+            new函数中没有加return 时，默认返回值这个对象；果如有return ，返回值是对象，则返回这个对象，如果return的不是对象，则返回默认添加的对象
+            new 出来的对象，称为实例化对象
+            portotype :  Teacher.prototype 这个值是对象 函数身上既有原型，也有原型链
+            __proto__ 原型链 对像身上才有，但是没有原型 是实例化对像与构造函数之间的桥梁
+            原型链的查找：是通过原型找的，所以方法应该挂在原型上。实例化对象f -> f.__proto__ == fF.prototype ->
+            函数的原型上的方法只给函数的实例化对象使用
+            自执行函数的this一定指向Window
+    2.22  包装对象（活雷锋，干玩活后销毁）：非空对象才可以加属性或方法 str.length -> new String() -> length,该对象销毁
+            当简单类型调用某个方法后者属性，系统会自动将该简单类型转为对象类型，在把调用的属性或方法提取出来后，该对象自动销毁。该过程叫做包装对象
+            包装对象的属性，只能读不能写
+        obj.hasOwnProperty() 返回布尔值
+       constructor:查看某个对象是由哪个构造函数构造出来的。容易被修改，
+            Tearcher.prototype = {say:fn,constructor:Tearcher}  当原型这样赋值时，会使constructor失去原来的指向，应该手动再重新给constructor赋值
+        instanceof 二元运算符  arr instanceof Array  ,左值一定是对像类型才行
+        搞笑： Object instanceof Object -> true     Object instanceof Function -> true
+             Function instanceof Function -> true    Function instanceof Object -> true
+    2.23 继承  子对象拥有父对象的属性和方法，同时也拥有自己特有的属性和方法
+            常见的继承 拷贝继承：
+                        属性继承（通过调用父类，call来修正this指向） call:函数声明时的自带方法
+                        方法继承（赋值与赋址）修改子类方法不能影响父类方法
+                            for( var key in Drag1.prototype){
+                                if(Drag1.prototype.hasOwnProperty(key)){    //注意需要去除祖先类的方法
+                                    Drag2.prototype[key] = Drag[1].prototype[key]
+                                }
+                            }
+                        深度克隆:
+                        1.  var obj = {name:wo;age:112;arr:[1,2]}
+                            var obj2 = JSON.parse(JSON.stringify(obj))  //注意 obj中的undefined和function不能转换
+                            JSON.stringity(json,fn callback(key,value){将不满意的转化结果进行处理},1-10[格式化输出])
+                        2.
+                     类式继承（效率最高）
+                        属性继承
+                        方法继承
+                            function Paohui(){};
+                            Paohui.prototype = Drag1.prototype;
+                            var ph = new Paohui();
+                            Drag2.prototype = ph;
+                            d2.init() 通过__ptoto__查找其构造函数的原型(Drag2.prototype 即 ph),继续通过ph的__ptoto__寻找其构造函数的原型（Paohui.prototype 即Drag1.prototype）,
+                     对象继承
+
+            fn.call(改变this,实参) call也可以调用函数
+            fn.apply(改变this，实参数组)
+            arr.forEach(fn(){alert(this)},arr) 第二个参数为改变this的指向，否者fn中的this是window
+
+            toString()将某种类型转化为字符串，所有对象都有该方法，通过原型链的Object上的方法   alert时会自动首先调用toString方法
+                也可以转16进制 Number('123').toString(16)
+                Object.prototype.toString.call( arr ) 可以判断数据的类型
+                Array也可以，但是Array自己不能转，所以用Object
+    2.24    将类数组转化为数组：Array.from() es6方法
+                            var li = Array.prototype.slice.call(aLi) slice不会改变原数组   [].slice.call( aLi )
+            判断是不是数组的方法： Array.isArray( obj )
+                                obj.push?true:false
+                                Object.prototype.toString.call( obj )  -- [object Array]
+            typeof是一个运算符 typeof(arr) typeof arr  两种写法没有区别
+            getET() 是动态方法 qureySlecetorAll() 是静态方法
+            for(var i=0...){ ul.appendChild(li[i]) }
+            this的指向问题：
+                new运算符 fn 中的this都是指向这个对象
+                有call优先call ； new为obj； 定时器是window； 函数直接调用也是window； 事件调用或者方法调用指向调用者 ； 闭包中this是window
+                es6的箭头函数不要绑在事件上，这是this会指向window
+
+            组件：复用率高，模块封装  （接口）传参；
+                                  配置参数（即用对象管理，从而不用关心参数的顺序，有配置参数则走配置参数，没哟的话走默认参数）；
+                                  组件事件
+            映射/触发器模拟addEventListener()事件
+    2.27   jqurey js的一个类库（面向对象写的）
+            1.xx 兼容ie 低版本，没有新特性
+            3.xx 不兼容ie 低版本，有些新特性
+            选择器 $('div[class|="box"]')
+                $(':button') / $('input[type="button"]')  冒号专用于input（checkbox/checked都可以）
+                $('li:even') even偶数  odd奇数
+                first() | li[class="lis"]:first  //找到第一个元素
+                $('li:eq(2)')第二个li,即可以指定
+                $('li:lt(3)')  $('li:gt(3)') 大于小于
+        设置属性：attr({index:1,age:12})
+                attr('checked')  返回值为undefined/checked
+                prop('checkee')  专门用来处理选择框的，返回值为true/false
+
+            DOMContentLoaded:当页面结构加载完成
+            window.onload:当资源加载完成后
+                在低版本ie下6-8，找document.documentElement.doScroll('left'),只有加载DOM完成时,才有doScroll('left')这个方法
+                try(){}catch(e){}
+            jq下$('document').ready(fn)  或 $(function(){alert(22)})
+            循环 $('li').click(function(){alert( $(this).text() )})  this就是点击的元素,也可以直接用this
+                $('li').each(function(index,el){
+                    $(el).click( fn(){ alert($(ele).text()) } )
+                })
+            在低版本的ie ，undefined可以被修改
+            jq选择器：既不想使用new，也不能递归（用代理解决）
+            jQuery的无new化操作：
+                "use static"  //this指向undefined ,所以要判断，因为严格模式下，this指向undefined
+                (function(global,factory){
+                    factory(global);
+                })(typeof window !== 'undefined'?window:this,function(global,noGlobal){ // noGlobal 为undefined,防止undefined被改写
+                    function jQuery(selector){
+                        return  new jQuery.prototype.fn(selector);
+                    }
+                    jQuery.prototype = {
+                     constructor:jQuery,
+                        css(){}
+                    }
+                    jQuery.prototype.fn = function(selector){};
+                    jQuery.prototype.fn.prototype = jQuery.prototype;
+                    global.$ = global.jQuery = jQuery;    //在闭包内定义的$,想要在全局使用，可以将$挂载到window上 -> window.$
+                })
+            var jQuery = fn(){};console.log(jQuery) //弹出后面空的jq，会先解析，后执行赋值
+            function jQuery(){};console.log(jQuery) //弹出前面有内容的jq
+
+            在严格模式下：默认全局的this是undefined，别的情况不变；箭头函数在严格模式下，this还是指向window
+        jq命令：find('#box')  val('')清空value val()读取value
+                off()解除上一次绑定，js中的事件都是通过addEventListener()绑定的，故可重复执行
+        $('#red').replaceWith($('#blue') | fn(该函数必须返回html字符串))
+        $('#red').clone(true)
+        添加自定义属性：1.div.index 2.div.setAttribute('index',1) 3.行内自定义 4.div.dataset.index = 0;(html中表为现data-index,js中获取：div.dataset.index)
+        $('#box').height()不带单位，不包括padding和border
+        $('#box').innerHeight()不带单位，仅仅不包括border，注意设置的时候，也会计算padding在内
+        $('#box').outerHeight()不带单位，包括border和border，如要包括margin，则传入true
+        $('#box').offset() -> { top:200,left:100 } //注意这个是相对于整个DOM文档的定位
+        $('#box').position() -> {top:,left:} //这个是相对于有定位的元素即可
+        scrollTop()  相当于原生中的scrollTo()
+
+        3.3
+        ajax 异步的js和xml，前后端数据交互的一种技术
+            优点：1.优化用户体验,不用刷新页面，只刷新数据；2.提供一个中转，大大减少服务器压力
+        xml：是用来存储数据的（没有json的概念时），可以自定义标签<name>辛子康</name>，兼容性很好
+        现在数据格式：json/xml/字符串   用ajax获取到的都是字符串
+                json = '{}' / '[]' json数组
+
+        var ajax = new XMLHTTPREQUest();
+        ajax.open('get'/'post',url,是否异步true);   'php/get.php?user='+encodeURI(val) 注意中文的转换
+        ajax.send()
+        ajax.onload = fn(){ //等待服务器响应
+                ajax.responseText
+        用post方式
+        ajax.open()
+        ajax.setRequestHeader('Content-Type','application/x-www-form-urlencoded')  设置请求头,数据格式
+        ajax.send('user='+val)  //这时不需要再使用encodeURL,因为请求头已经设置过了
+        通过服务器发送的形式进行传输； 安全性相对较高； 理论上咩有大小限制，但一般后端会给一个限制
+    3.6
+        1.JSON.parse() 需要使用严格模式，即必须是双引号才行
+        使用eval可以解决eval('') //eval函数中一定是字符串，可以计算字符串，并执行其中的js代码
+        2.function(){} 报错 -> (function(){})
+        eval('('+ str + ')') 括号的妙用：代码本身没错，但是在报错的情况下，可以用括号包一下，变成表达式
+            但是eval不安全，因为它可以计算用户输入的字符串，有可能被注入病毒，慎用eval
+        3.鉴于eval不安去，使用内置对象Function,缺点是性能不高，其实Function的内部实现就是使用的eval
+            var json = (new Function('','return' + str))()  -> 类似于eval，计算字符串，返回的是json对象
+        4.使用正则替换字符串 str = str.replace(/'/g.'"')
+
+        同步异步：同步在浏览器发送请求后，需要等待服务器处理完毕后才能继续执行后续代码
+                异步在send发送后，不需要等待服务器处理完毕就可继续执行
+        获取到的是XML格式，则转换为ajax.responseXML -> 转化为DOM结构
+        http状态码 200-207成功
+                    3 重定向
+                    4 发生错误
+                    5 服务器发生故障
+                    6 服务器错误
+        ajax.status  除第一步外，都可以返回数字用来检测 ajax.readystate 4代表请求完成
+        ajax.onreadystatechange:可以看到ajax.readystate的除0外所有步骤,且所有浏览器都兼容
+        ajax.onload 只能看到ajax.readystate的4，低版本ie不兼容
+
+        XMLHTTPRequest属性：该对像自身没有任何属性，都是继承自其原型的，最后是Object
+        一般拥有10个普通属性和9个方法：
+        readyState： 0-4 只读属性
+        onreadystatechange:在一个ajax周期中触发4次,在该回调函数中默认传入event实例
+        status：http请求状态码
+        onloadstart:默认传入一个ProgressEvent事件进度对象  有3个重要属性：lengthComputable初始值false表示长度是否可计算；loaded：已加载资源的大小；total：资源总共大小
+        onprogress：该事件回调在readystate==3时开始触发，默认传入ProgressEvent对象，可通过e.loaded/e.total计算加载速度
+        onload：在readtstate==4状态之后触发
+        timeout：指定ajax超时时常，只有能换成非0数字才生效 xhr.timeout = '123'
+        ontimeout:在请求超时时触发
+        onerror:通常只在网络出问题时触发
+
+        3.7
+        使用file时，前端传递的数据在file.files[0] -> 这是一个对象，传递给后端必须是二进制数据: var f = new FormData; f.append('file',Fail.files[0]); ajax.send(f)
+                    使用上传进度条：ajax.upload.onprogress = fn(ev){ ev.loaded | ev.total }
+            fileReader+ rdadAsDataURL 将file文件转成源码，其中有个onload事件，转换完成。
+
+        3.8
+         同源策略：   同协议：http/https（加了安全证书） 阮一峰/张鑫旭网络安全协议 file：本地；ftp:文件共享协议
+                    同端口：默认80端口 一个ip地址的端口有2^16之多
+                    同域名：就是ip的一个别名 119.23.332.23
+            只要不是自己本机上的都访问不到
+        解决跨域的方式：
+                1.通过高版本浏览器中创建XMLHTTPRequest，配合后端在PHP头部添加权限 Access-Control-Allow-Origin:*
+                2.服务器代理 后端文件可以访问到第三方网站，前端再访问后端即可拿到数据
+                3.iframe 不能获取数据，只是来展示其他页面
+                4.jsonp : json + padding 通过script请求外域中的内容，并将内容尽可能转换为js代码。不是通过后缀名来决定，而是通过内容来决定能不能使用
+                    什么元素可以跨域访问：img link script
+                    但是script是同步加载，可以通过动态创建script实现按需加载，这种方式为异步操作；
+                    必须在全局用一个函数去接受这个数据；
+                    数据一定是函数名+数据的格式 fn1({///})
+            数据到底是ajax的还是jsonp的，关键看有没有回调。jsonp缺点：ajax请求会的数据，jsonp不能使用；jsonp请求通过地址栏，所以是get请求
+            创建插入完script标签后，请求即已发送，script标签可以立即删除，并没有什么影响，只要有回调，就会有相应
+
+        ajax缺点： 浏览器的回退功能失效，只是刷新数据，对浏览器功能的破坏，干掉了浏览器的back和history功能
+3-10
+        cookie：存储在用户终端的数据（一个浏览器能够跟踪到的自定义属性）
+        大多数浏览器体积很小，主要用来辨别用户身份，进行session跟踪
+        每个域名下大概有50个cookie，只能在服务器环境下使用；浏览器之间cookie不共享
+        设置cookie: document.cookie=5 这样的话，多个cookie会发生覆盖
+                    document.cookie='name=xzk'
+        生命周期：默认直到关闭浏览器时，生命结束
+            设置生命周期 document.cookie=' 字符串 '  expires
+
+3-13
+        本地存储 window.localStorage 在高版本浏览器下可以在本地环境下打开,ie只能在服务器下打开
+        设置 localStorage.setitem('name',''xzk)  // 参数都是字符串，要存json格式的话，可以用JSON的转化方法
+        获取 localStorage.getItem('name')
+        删除 localStorage.remoceItem('name')
+        清空 localStorage.clear()  //可以清空手机本地存贮的，以防变慢
+
+        生命周期：只要不删除，都存在
+        大小：每个域名一般有5M，也会根据浏览器变化，并且在当前浏览器下数据是共享的
+        事件:localStorage.addEventListener('storage',function(ev){})  //当操作本地存储的数据时在兄弟页面触发,可以查看ev
+                手动删除的时候会在当前页面触发事件（即直接在f12中点击删除），别的都不会触发
+
+        ev.target.tagName == 'LI'  tagName一定是大写
+
+    sessionStorage
+        sessionStorage.setItem()
+        生命周期 ： 关闭浏览器就死亡
+        不支持storage事件
+
+3-14
+        当页面还没有元素时，绑定事件会出凑，可以使用事件委托，判断target是不是需要的元素
+
+3-15
+        jq插件：  组件：功能  插件：辅助
+            jq来说： 工具型:$.each(原声/jq)  $.extent()  拓展工具型方法   功能型:$('li').each() $.fn.extend() 拓展功能型方法
+
+        es6的箭头函数中this是静态的，即this指向是函数书写时就被定义的，而不是在被调用时定义，因为箭头函数本身没有this，它都是继承自父级的
+        class Person {
+            constructor(name) {
+                this.name = name;
+            }
+            say () {
+                console.log("say hi");
+            }
+            sing () {
+                console.log("lalalalala");
+            }
+        };
+        new Person().say(); //输出 ：say hi
+        new Person().sing(); //输出 ：lalalalala
+        拖拽： ondragstart:作用在被拖拽元素上   是鼠标进去的时候触发ondragenter ondragover ondrop
+        ul.insertBefore(li,ul.children[0])  当第二个参数不存在时，默认append方法插入
+        循环中绑定事件，注意在添加前off(),之后在添加
+
+
+    es6
+        symbol:唯一，避免重名覆盖  obj[Symbol.get]=fn1; -> obj[Symbol.get]()调用形式
+        Object.keys(obj)  输出obj的key数组
+
+            function* fn(){
+                let keys = Object.keys(this); //谁调用这个fn，this就指向谁，是一个obj
+                for( var i of this ){
+                    yield [i,this[i]]; //每次输出一个数组[key,value]
+                }
+            }
+            obj[Symbol.iterator] = fn;
+            for( let [key,val] of obj ){
+                console.log(key,val);
+            }
+
+        let map = new Map(); map.set()/get/delet/clear
+        遍历方法;3个遍历器生成函数keys()/values()/entries()返回所有成员  1个遍历方法forEach()
+
+        数组去重 let set=new Set(arr); 重新转化为数组[...set] 成员的值都是唯一个，没有重复的
+    call/bind/apply三者异同
+        apply 、 call 、bind 三者都是用来改变函数的this对象的指向的；
+        apply 、 call 、bind 三者第一个参数都是this要指向的对象，也就是想指定的上下文；
+        apply 、 call 、bind 三者都可以利用后续参数传参；
+        bind 是返回对应函数，便于稍后调用；apply 、call 则是立即调用 。
+    class中的super关键字
+        当作函数;只能在子类的constructor中使用，否则报错
+        当作对象，指向父类的原型对象，可以通过super.say()来调用父类的方法，也只能在子类的constructor中使用
+    Moudel
+        CMD：服务器的规范 “运行时加载”：什么时候用什么时候同步的加载
+        AMD:Require.js 先异步加载，再使用。浏览器的规范
+
+    3-20  node
+        win+r 调出系统运行界面
+        两次ctrl+c 退出输入界面
+        查看更快的景象 nrm test  使用景象 nrm use taobao  查看当前镜像：nrm ls
+        退一级 c:
+        清空 cls
+        安装到本文件夹 npm i webpack -D  也就是--save-dev
+                                    -S --s
+
+    3-24 关于同步异步的理解
+        浏览器的四大线程:js引擎线程（处理js）,GUI渲染线程（渲染页面），浏览器事件触发线程，也可以有http请求线程
+        js引擎线程和GUI渲染线程是互斥的因为js可以操作DOM，进而会影响到页面渲染，这就是为什么js阻塞页面加载
+        事件触发线程：当一个事件被触发时，该线程会把事件添加到任务队列的队尾。这些事件可以来自当前代码块调用的setTimeout/Ajax，
+            也可以是浏览器其他线程的任务（鼠标点击/页面滚动）
+        任务分为同步任务和异步任务。所有的同步任务都在主线程上执行，组成一个执行栈。当主程序运行时，会产生一个堆和一个栈。主线程之外还有一个任务队列，异步任务都放置到任务队列中，
+            任务队列是一个先进先出的数据结构
+
+        浏览器阻塞和无阻塞：js执行时对其他资源的阻塞，js加载时对其他资源的阻塞
+        这两个阻塞发生在页面初次解析html是对性能的影想较大。因为:document.DOMContentLoaded会在DOM解析完成之后触发，在这个事件触发之后，
+            浏览器进去异步事件驱动阶段（另一个线程控制）注意不是在window.onload之后进入。所以，为了防止屏幕白屏现象，解决办法就是将script便签放在页面最后
+        资源加载带来的阻塞：图片的下载没有阻塞，可以并行下载很多图片。但是如果浏览器在解析DOM时需要加载资源，此时会阻塞渲染线程及其他下载线程
+            无阻塞加载脚本技术：原声defer的思路：为script标签配置一个defer属性，此时脚本资源会并发下载。在DOM解析完成之后（document.readyState -> inactive）=> defer属性的js脚本执行 =>
+                document.DOMContentLoaded => 浏览器进去异步事件驱动阶段
+            defer缺点：脚本加载顺序和书写顺序一致，并且执行脚本是也会阻塞其他线程（这个无法优化）
+            与defer类似的是async,只是它是异步的,比同步的defer更快一步
+        无阻塞加载脚本之二——动态脚本元素：动态脚本元素在下载的时候是不会阻塞渲染线程的，也就是实现了并行下载。
+            `<script>
+              var node = document.createElement('script');
+              node.src = '...';
+              document.head.appendChild(node);
+            </script>`
+            脚本下载完成后就会异步执行，为了解决脚本之间的依赖问题，可以在script的onload事件中添加回调
+
+    </p>
+
+    <span>
+    小知识点：
+        DOM.ready / DOM.onload 前者DOM加载完成后直接对DOM进行操作，后者是在文档资源加载完成后才能继续操作
+        数组拷贝，不是附址
+
+            var b = a.concat()  或者 Object.assign(b,a)
+
+    </span>
+    <script>
+        /*var aaa = '21d';
+        console.log(aaa.charAt(9)==null)
+        var date = new Date();
+        var arr = [2016,10,03,10,30,40];
+        //2016年10月3号10点30分40秒，2016-10-3 10：30：40，2016/10/3 10：30：40
+        var str = '';
+        var arrStr = ['年月日时分秒','-- ::','// ::'];
+        function fn(n) {
+            for (var i = 0; i < arr.length; i++) {
+                str += arr[i] + arrStr[n].charAt(i);
+            }
+            return str;
+        }
+        fn(1);
+        console.log(str);*/
+
+
+
+    </script>
+</body>
+</html>
